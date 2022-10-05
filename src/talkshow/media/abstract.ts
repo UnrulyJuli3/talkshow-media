@@ -1,5 +1,7 @@
 import { IMedia, IMediaVersion } from "../api";
 
+const strip = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, "");
+
 abstract class AbstractMedia implements IMedia {
     id: number;
     versions: IMediaVersion[] = [];
@@ -11,6 +13,18 @@ abstract class AbstractMedia implements IMedia {
     abstract get type(): string;
 
     abstract addVersion(idx: number, id: number, locale: string | null, tag: string, text: string): any;
+
+    filteredVersions(text: string, queries: string[]) {
+        const query = strip(text);
+        return this.versions.filter(version => {
+            if (!query) return true;
+            const queryList: string[] = [];
+            if (queries.includes("id")) queryList.push(version.id.toString());
+            if (queries.includes("tag")) queryList.push(...version.tag.split(","));
+            if (queries.includes("text")) queryList.push(version.text);
+            return queryList.some(ref => strip(ref).includes(query));
+        });
+    }
 
     get numVersions() {
         return this.versions.length;

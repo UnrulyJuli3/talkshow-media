@@ -20,6 +20,10 @@ export default defineComponent({
         select(bundle: BundleItem, game: GameItem) {
             this.selected = { bundle, game };
             this.hasSelected = true;
+        },
+        exit() {
+            delete this.selected;
+            this.hasSelected = false;
         }
     },
     components: { Picker, Viewer }
@@ -28,7 +32,7 @@ export default defineComponent({
 
 <template>
     <div class="container-lg">
-        <Viewer v-if="hasSelected" :bundle="selected!.bundle" :game="selected!.game" />
+        <Viewer v-if="hasSelected" :bundle="selected!.bundle" :game="selected!.game" @exit="exit" />
         <Picker v-else @select="select" />
     </div>
 </template>

@@ -79,7 +79,7 @@ export default defineComponent({
     <div>
         <ul v-for="set in pageSets" class="pagination pagination-sm justify-content-center">
             <li v-for="n in set" :class="{ 'page-item': true, 'active': page === (n as number), 'disabled': !(n === 'prev' ? canPrev : n === 'next' ? canNext : true) }">
-                <button class="page-link" @click="goto(n)">{{ n === 'prev' ? 'Previous' : n === 'next' ? 'Next' : n }}</button>
+                <button class="page-link" @click="goto(n)">{{ n === 'prev' ? 'Previous' : n === 'next' ? 'Next' : (n as number) + 1 }}</button>
             </li>
         </ul>
     </div>

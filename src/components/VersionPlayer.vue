@@ -50,6 +50,12 @@ export default defineComponent({
             else this.stop();
         }
     },
+    watch: {
+        playing(playing) {
+            if (playing) this.$emit("play", this.sound!.duration);
+            else this.$emit("stop");
+        }
+    },
     unmounted() {
         this.stop();
     }
