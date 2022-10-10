@@ -15,4 +15,5 @@ export interface IMediaVersion {
     source: string;
     text: string;
     metadata: Map<string, string | undefined>;
+    displayText?: string;
 };

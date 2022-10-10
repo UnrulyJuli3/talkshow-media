@@ -51,15 +51,15 @@ export default defineComponent({
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li>Version {{ version.idx + 1 }} of media <strong>{{ media.id }}</strong> ({{ media.type }})</li>
-                        <li v-if="version.locale">Locale: {{ version.locale }}</li>
-                        <li v-if="version.tag">Tag(s): <code>{{ version.tag }}</code></li>
+                        <li v-html="$t('viewer.info.media', { version: version.idx + 1, media: `<strong>${media.id}</strong> (${media.type})` })"></li>
+                        <li v-if="version.locale">{{ $t('viewer.info.locale') }} {{ version.locale }}</li>
+                        <li v-if="version.tag">{{ $t('viewer.info.tag') }} <code>{{ version.tag }}</code></li>
                         <li>
-                            Raw text:
+                            {{ $t('viewer.info.text') }}
                             <pre class="my-2">{{ version.source }}</pre>
                         </li>
                         <li v-if="version.metadata.size">
-                            Metadata:
+                            {{ $t('viewer.info.metadata') }}
                             <table class="table table-striped table-bordered table-sm my-2">
                                 <tbody>
                                     <tr v-for="[key, value] in version.metadata.entries()">

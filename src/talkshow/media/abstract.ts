@@ -5,6 +5,7 @@ const strip = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, "");
 abstract class AbstractMedia implements IMedia {
     id: number;
     versions: IMediaVersion[] = [];
+    displayText?: string;
 
     constructor(id: number) {
         this.id = id;
@@ -21,7 +22,11 @@ abstract class AbstractMedia implements IMedia {
             const queryList: string[] = [];
             if (queries.includes("id")) queryList.push(version.id.toString());
             if (queries.includes("tag")) queryList.push(...version.tag.split(","));
-            if (queries.includes("text")) queryList.push(version.text);
+            if (queries.includes("text")) {
+                queryList.push(version.text);
+                if (version.displayText) queryList.push(version.displayText);
+            }
+
             return queryList.some(ref => strip(ref).includes(query));
         });
     }

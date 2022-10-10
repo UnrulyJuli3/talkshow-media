@@ -1,5 +1,5 @@
 <script lang="ts">
-import { clamp } from "lodash";
+import { clamp, cloneDeep } from "lodash";
 import { defineComponent, PropType } from "vue";
 import { BundleItem, GameItem } from "../games";
 import { IMedia } from "../talkshow/api";
@@ -8,6 +8,7 @@ import ViewerPagination from "./ViewerPagination.vue";
 import ViewerVersion from "./ViewerVersion.vue";
 
 const itemsPerPage = 150;
+// const sheetsClipboardType = "application/x-vnd.google-docs-embedded-grid_range_clip+wrapped";
 
 export default defineComponent({
     props: {
@@ -18,29 +19,46 @@ export default defineComponent({
         game: {
             type: Object as PropType<GameItem>,
             required: true
-        }
+        },
+        translator: Boolean
     },
     data(): {
         export: Export;
+        media: IMedia[];
         loaded: boolean;
         page: number;
         searchQuery: string;
         searchParams: string[];
+        mediaCopied: boolean;
+        mediaCopyTimeout?: number;
+        sheetLink: string;
+        sheetName: string;
+        sheetFetching: boolean;
+        sheetFetched: boolean;
     } {
         return {
             export: new Export(this.bundle, this.game),
+            media: [],
             loaded: false,
             page: 0,
             searchQuery: "",
-            searchParams: ["id", "tag", "text"]
+            searchParams: ["id", "tag", "text"],
+            mediaCopied: false,
+            sheetLink: "",
+            sheetName: "",
+            sheetFetching: false,
+            sheetFetched: false
         };
     },
     computed: {
+        gameNameKey() {
+            return `picker.game.names.${this.game.id.toLowerCase()}`;
+        },
         exportObject() {
             return this.export!;
         },
         visibleMedia() {
-            return this.export.media!.filter(media => media.filteredVersions(this.searchQuery, this.searchParams).length);
+            return this.media.filter(media => media.filteredVersions(this.searchQuery, this.searchParams).length);
         },
         hasPageItems() {
             return !!this.pageItems;
@@ -95,10 +113,175 @@ export default defineComponent({
         },
         exit() {
             this.$emit("exit");
+        },
+        /* createTableString() {
+            const table = document.createElement("table");
+            const header = document.createElement("tr");
+            let headerCell = document.createElement("th");
+            headerCell.innerText = "Media ID";
+            header.append(headerCell);
+            headerCell = document.createElement("th");
+            headerCell.innerText = "Text";
+            header.append(headerCell);
+            table.append(header);
+
+            this.media.forEach(media => {
+                media.versions.forEach((version, index) => {
+                    const applyBorder = (cell: HTMLTableCellElement) => {
+                        if (!index) cell.style.borderTop = "2px solid black";
+                    };
+
+                    const row = document.createElement("tr");
+                    let cell = document.createElement("td");
+                    cell.style.fontSize = "14pt";
+                    cell.style.fontWeight = "bold";
+                    cell.style.whiteSpace = "nowrap";
+                    applyBorder(cell);
+                    cell.innerText = version.id.toString();
+                    row.append(cell);
+                    cell = document.createElement("td");
+                    applyBorder(cell);
+                    cell.innerText = version.source;
+                    row.append(cell);
+                    table.append(row);
+                });
+            });
+
+            return table.outerHTML;
+            // return `<table><tr><th>Media ID</th><th>Text</th></tr>${this.media.map(media => media.versions.map((version, index) => `<tr><td style="font-size:14pt;font-weight:bold;white-space:nowrap;${index ? "border-top:2px solid #000;" : ""}">${version.id}</td><td${index ? " style=\"border-top:2px solid #000;\"" : ""}>${version.source}</td></tr>`).join("")).join("")}</table>`;
+        }, */
+        copyMedia() {
+            const table = document.createElement("table");
+
+            const colgroup = document.createElement("colgroup");
+            let col = document.createElement("col");
+            col.width = "100";
+            colgroup.append(col);
+            col = document.createElement("col");
+            col.width = "900";
+            colgroup.append(col);
+            table.append(colgroup);
+
+            const header = document.createElement("tr");
+            let headerCell = document.createElement("th");
+            headerCell.innerText = "Media ID";
+            headerCell.style.width = "1000px";
+            header.append(headerCell);
+            headerCell = document.createElement("th");
+            headerCell.innerText = "Text";
+            header.append(headerCell);
+            table.append(header);
+
+            const media: IMedia[] = [];
+            ["audio", "text"].forEach(type => media.push(...this.media.filter(media => media.type === type)));
+
+            media.forEach((media, mediaIndex) => {
+                media.versions.forEach((version, index) => {
+                    const applyBorder = (cell: HTMLTableCellElement) => {
+                        if (mediaIndex && !index) cell.style.borderTop = "1px solid black";
+                    };
+
+                    const row = document.createElement("tr");
+                    let cell = document.createElement("td");
+                    cell.style.fontSize = "14pt";
+                    cell.style.fontWeight = "bold";
+                    cell.style.whiteSpace = "nowrap";
+                    applyBorder(cell);
+                    cell.innerText = version.id.toString();
+                    row.append(cell);
+                    cell = document.createElement("td");
+                    cell.style.wordWrap = "break-word";
+                    applyBorder(cell);
+                    cell.innerText = version.text;
+                    row.append(cell);
+                    for (let i = 0; i < 5; i++) {
+                        cell = document.createElement("td");
+                        applyBorder(cell);
+                        row.append(cell);
+                    }
+                    table.append(row);
+                });
+            });
+
+            navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([table.outerHTML], { type: "text/html" }) })]);
+            /* if (this.copies.has(type)) window.clearTimeout(this.copies.get(type));
+            this.copies.set(type, window.setTimeout(() => this.copies.delete(type), 1000)); */
+            window.clearTimeout(this.mediaCopyTimeout);
+            this.mediaCopied = true;
+            this.mediaCopyTimeout = window.setTimeout(() => this.mediaCopied = false, 1500);
+        },
+        updateSheetLink(e: Event) {
+            this.sheetLink = (e.target as HTMLInputElement).value;
+        },
+        updateSheetName(e: Event) {
+            this.sheetName = (e.target as HTMLInputElement).value;
+        },
+        async submitSheet() {
+            if (this.sheetFetched) this.undoSheet();
+
+            const regex = /\/d\/(.+)\//;
+            if (regex.test(this.sheetLink)) {
+                this.sheetFetching = true;
+                const id = regex.exec(this.sheetLink)![1];
+
+                const url = new URL(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq`);
+                url.searchParams.set("tqx", "out:json");
+                if (this.sheetName.trim()) url.searchParams.set("sheet", this.sheetName);
+
+                const response = await fetch(url);
+                const raw = await response.text();
+
+                type Column = { id: string; label: string; type: string; pattern?: string; };
+                type Cell = { v: any; f?: string; };
+                type Row = { c: Cell[]; };
+                type Table = { cols: Column[]; rows: Row[]; };
+
+                const data = JSON.parse(/^google.visualization.Query.setResponse\((.+)\);$/m.exec(raw)![1]) as { table: Table };
+
+                const { table: { cols, rows } } = data;
+
+                let lastColIndex = -1;
+                const getColIndex = (type: string, fallback: number) => {
+                    let index = cols.findIndex((col, index) => index > lastColIndex && col.type === type);
+                    if (index < 0) index = fallback;
+                    lastColIndex = index;
+                    return index;
+                };
+
+                const columnId = getColIndex("number", 0);
+                // const columnText = getColIndex("string", 1);
+                getColIndex("string", 1);
+                const columnDisplay = getColIndex("string", 2);
+
+                this.sheetFetching = false;
+                rows.forEach(row => {
+                    // console.log(row);
+                    const cells = row.c;
+                    const idCell = cells[columnId];
+                    // const textCell = cells[columnText];
+                    const displayCell = cells[columnDisplay];
+                    if (idCell && displayCell) {
+                        this.media.forEach(media => {
+                            const version = media.versions.find(version => version.id == idCell.v);
+                            if (version) {
+                                version.displayText = displayCell.v;
+                            }
+                        });
+                    }
+                });
+
+                this.sheetLink = "";
+                this.sheetFetched = true;
+            }
+        },
+        undoSheet() {
+            this.media.forEach(media => media.versions.forEach(version => delete version.displayText));
+            this.sheetFetched = false;
         }
     },
     async mounted() {
         await this.export.load();
+        this.media = cloneDeep(this.export.media!);
         this.loaded = true;
         // console.log(this.export.media);
     },
@@ -108,13 +291,29 @@ export default defineComponent({
 
 <template>
     <div class="text-center pt-5">
-        <button class="btn btn-secondary" @click="exit">Back to Selection</button>
+        <button class="btn btn-secondary" @click="exit">{{ $t("viewer.exit") }}</button>
     </div>
     <h4 class="text-dark text-center mb-0 mt-5" :style="{ '--bs-text-opacity': 0.5 }">{{ bundle.name }}</h4>
-    <h1 class="display-5 text-center">{{ game.name }}</h1>
+    <h1 class="display-5 text-center">{{ $te(gameNameKey) ? $t(gameNameKey) : game.name }}</h1>
     <div v-if="loaded" class="py-5">
+        <div v-if="translator || sheetFetched" class="d-grid gap-2 col-6 mx-auto mb-5">
+            <template v-if="translator">
+                <button class="btn btn-success" @click="copyMedia">{{ $t(mediaCopied ? "viewer.copy.copied" : "viewer.copy.button") }}</button>
+                <form @submit.prevent="submitSheet">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" :disabled="sheetFetching" :placeholder="$t('viewer.paste.placeholder')" :value="sheetLink" @input="updateSheetLink" />
+                        <button type="submit" class="btn btn-primary" :disabled="sheetFetching">{{ $t("viewer.paste.fetch") }}</button>
+                    </div>
+                    <label class="form-label">{{ $t("viewer.paste.name.label") }}</label>
+                    <input type="text" class="form-control" :disabled="sheetFetching" :placeholder="$t('viewer.paste.name.placeholder')" :value="sheetName" @input="updateSheetName" />
+                    <div class="form-text">{{ $t("viewer.paste.name.text") }}</div>
+                    <div class="form-text" v-html="$t('viewer.paste.name.warning')"></div>
+                </form>
+            </template>
+            <button type="submit" class="btn btn-secondary" v-if="sheetFetched" @click="undoSheet">{{ $t("viewer.paste.undo") }}</button>
+        </div>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Enter query&hellip;" :value="searchQuery" @input="updateSearch" />
+            <input type="text" class="form-control" :placeholder="$t('viewer.search.placeholder')" :value="searchQuery" @input="updateSearch" />
             <button v-if="searchQuery.trim().length" class="btn btn-secondary" type="button" @click.prevent="clearSearch">&times;</button>
         </div>
         <template v-if="pages.length">
@@ -133,11 +332,11 @@ export default defineComponent({
             <table class="table table-responsive table-bordered table-striped align-middle">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col" v-if="hasLocales">Locale</th>
-                        <th scope="col" v-if="hasTags">Tag(s)</th>
-                        <th scope="col">Text</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">{{ $t("viewer.headers.id") }}</th>
+                        <th scope="col" v-if="hasLocales">{{ $t("viewer.headers.locale") }}</th>
+                        <th scope="col" v-if="hasTags">{{ $t("viewer.headers.tag") }}</th>
+                        <th scope="col">{{ $t("viewer.headers.text") }}</th>
+                        <th scope="col">{{ $t("viewer.headers.actions") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -155,7 +354,7 @@ export default defineComponent({
             </table>
             <ViewerPagination :num-pages="numPages" :page="page" @navigate="navigate" />
         </template>
-        <p v-else class="text-muted text-center mt-5 mb-0">No items to show</p>
+        <p v-else class="text-muted text-center mt-5 mb-0">{{ $t("viewer.empty") }}</p>
     </div>
 </template>
 

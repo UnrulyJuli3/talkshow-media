@@ -63,7 +63,7 @@ export default defineComponent({
         <th scope="row">{{ version.id }}</th>
         <td v-if="hasLocales" class="locale">{{ version.locale }}</td>
         <td v-if="hasTags"><code v-if="version.tag">{{ version.tag }}</code></td>
-        <td :class="{ 'text': true, 'playing': isPlaying }" :style="textCellStyle">{{ version.text }}</td>
+        <td :class="{ 'text': true, 'playing': isPlaying }" :style="textCellStyle">{{ version.displayText || version.text }}</td>
         <td class="controls">
             <VersionPlayer v-if="media.type === 'audio'" :audio-path="audioPath" @play="startPlaying" @stop="stopPlaying" />
             <a class="text-decoration-none" href="#" @click.prevent="showInfo">

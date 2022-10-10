@@ -1,0 +1,107 @@
+{
+    "en": {
+        "translatorMode": "Translator mode",
+        "picker": {
+            "game": {
+                "unsupported": "Unsupported",
+                "incomplete": "Coming soon",
+                "view": "View",
+                "names": {}
+            }
+        },
+        "viewer": {
+            "exit": "Back to Selection",
+            "copy": {
+                "button": "Copy media for Google Sheets",
+                "copied": "Copied!"
+            },
+            "paste": {
+                "placeholder": "Paste a Google Sheets link to show translations",
+                "fetch": "Fetch",
+                "name": {
+                    "label": "Sheet name",
+                    "placeholder": "e.g. \u201cWeapons Drawn\u201d",
+                    "text": "If your book has multiple sheets for multiple games, write the name of the associated game\u2019s sheet here.",
+                    "warning": "Do this <strong>before</strong> clicking \u201cFetch.\u201d"
+                },
+                "undo": "Show original"
+            },
+            "search": {
+                "placeholder": "Enter query\u2026"
+            },
+            "pages": {
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "headers": {
+                "id": "ID",
+                "locale": "Locale",
+                "tag": "Tag(s)",
+                "text": "Text",
+                "actions": "Actions"
+            },
+            "empty": "No items to show",
+            "info": {
+                "media": "Version {version} of media {media}",
+                "locale": "Locale:",
+                "tag": "Tag(s):",
+                "text": "Raw text:",
+                "metadata": "Metadata:"
+            }
+        }
+    },
+    "de": {
+        "translatorMode": "Translator mode",
+        "picker": {
+            "game": {
+                "unsupported": "Unsupported",
+                "incomplete": "Coming soon",
+                "view": "View",
+                "names": {
+                    "overdrawn": "Kritzen Witzel",
+                    "thewheel": "Das Rad von unglaublicher Größe"
+                }
+            }
+        },
+        "viewer": {
+            "exit": "Back to Selection",
+            "copy": {
+                "button": "Copy media for Google Sheets",
+                "copied": "Copied!"
+            },
+            "paste": {
+                "placeholder": "Paste a Google Sheets link to show translations",
+                "fetch": "Fetch",
+                "name": {
+                    "label": "Sheet name",
+                    "placeholder": "e.g. \u201cWeapons Drawn\u201d",
+                    "text": "If your book has multiple sheets for multiple games, write the name of the associated game\u2019s sheet here.",
+                    "warning": "Do this <strong>before</strong> clicking \u201cFetch.\u201d"
+                },
+                "undo": "Show original"
+            },
+            "search": {
+                "placeholder": "Enter query\u2026"
+            },
+            "pages": {
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "headers": {
+                "id": "ID",
+                "locale": "Locale",
+                "tag": "Tag(s)",
+                "text": "Text",
+                "actions": "Actions"
+            },
+            "empty": "No items to show",
+            "info": {
+                "media": "Version {version} of media {media}",
+                "locale": "Locale:",
+                "tag": "Tag(s):",
+                "text": "Raw text:",
+                "metadata": "Metadata:"
+            }
+        }
+    }
+}
