@@ -19,7 +19,7 @@ export default defineComponent({
             hasSelected: false,
             languages: [
                 { locale: "en", name: "English" },
-                // { locale: "de", name: "Deutsch" }
+                { locale: "de", name: "Deutsch" }
             ],
             translator: false
         };

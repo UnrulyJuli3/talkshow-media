@@ -51,56 +51,58 @@
         }
     },
     "de": {
-        "translatorMode": "Translator mode",
+        "translatorMode": "Übersetzer-Modus",
         "picker": {
             "game": {
-                "unsupported": "Unsupported",
-                "incomplete": "Coming soon",
-                "view": "View",
+                "unsupported": "Nicht unterstützt",
+                "incomplete": "Erscheint bald",
+                "view": "Öffnen",
                 "names": {
                     "overdrawn": "Kritzen Witzel",
+                    "everyday": "Die Teufel im Detail",
+                    "surveybomb": "Die Poll Mine",
                     "thewheel": "Das Rad von unglaublicher Größe"
                 }
             }
         },
         "viewer": {
-            "exit": "Back to Selection",
+            "exit": "Zurück zur Auswahl",
             "copy": {
-                "button": "Copy media for Google Sheets",
-                "copied": "Copied!"
+                "button": "Medien für Google Sheets kopieren",
+                "copied": "Kopiert!"
             },
             "paste": {
-                "placeholder": "Paste a Google Sheets link to show translations",
-                "fetch": "Fetch",
+                "placeholder": "Füge einen Google Tabellen-Link ein, um Übersetzungen anzuzeigen",
+                "fetch": "Abrufen",
                 "name": {
-                    "label": "Sheet name",
-                    "placeholder": "e.g. \u201cWeapons Drawn\u201d",
-                    "text": "If your book has multiple sheets for multiple games, write the name of the associated game\u2019s sheet here.",
-                    "warning": "Do this <strong>before</strong> clicking \u201cFetch.\u201d"
+                    "label": "Tabellen-Name",
+                    "placeholder": "z.B. \u201cWeapons Drawn\u201d",
+                    "text": "Sollte die Tabelle mehrere Blätter enthalten, gib hier den Namen des zugehörigen Blattes ein.",
+                    "warning": "Dies muss eingetragen werden, <strong>bevor</strong> \u201cAbrufen\u201d angeklickt wird."
                 },
-                "undo": "Show original"
+                "undo": "Original anzeigen"
             },
             "search": {
-                "placeholder": "Enter query\u2026"
+                "placeholder": "Suche eingeben\u2026"
             },
             "pages": {
-                "previous": "Previous",
-                "next": "Next"
+                "previous": "Zurück",
+                "next": "Weiter"
             },
             "headers": {
                 "id": "ID",
-                "locale": "Locale",
+                "locale": "Sprache",
                 "tag": "Tag(s)",
                 "text": "Text",
-                "actions": "Actions"
+                "actions": "Aktionen"
             },
-            "empty": "No items to show",
+            "empty": "Keine Einträge verfügbar",
             "info": {
-                "media": "Version {version} of media {media}",
-                "locale": "Locale:",
+                "media": "Version {version} von Medium {media}",
+                "locale": "Sprache:",
                 "tag": "Tag(s):",
-                "text": "Raw text:",
-                "metadata": "Metadata:"
+                "text": "Roher Text:",
+                "metadata": "Metadaten:"
             }
         }
     }
