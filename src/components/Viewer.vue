@@ -2,6 +2,7 @@
 import { clamp, cloneDeep } from "lodash";
 import { defineComponent, PropType } from "vue";
 import { BundleItem, GameItem } from "../games";
+import Languages, { Sheet } from "../languages";
 import { IMedia } from "../talkshow/api";
 import Export from "../talkshow/export/export";
 import ViewerPagination from "./ViewerPagination.vue";
@@ -31,8 +32,6 @@ export default defineComponent({
         searchParams: string[];
         mediaCopied: boolean;
         mediaCopyTimeout?: number;
-        sheetLink: string;
-        sheetName: string;
         sheetFetching: boolean;
         sheetFetched: boolean;
     } {
@@ -44,13 +43,14 @@ export default defineComponent({
             searchQuery: "",
             searchParams: ["id", "tag", "text"],
             mediaCopied: false,
-            sheetLink: "",
-            sheetName: "",
             sheetFetching: false,
             sheetFetched: false
         };
     },
     computed: {
+        languagesWithSheets() {
+            return Languages.filter(lang => lang.sheet);
+        },
         gameNameKey() {
             return `picker.game.names.${this.game.id.toLowerCase()}`;
         },
@@ -58,7 +58,7 @@ export default defineComponent({
             return this.export!;
         },
         visibleMedia() {
-            return this.media.filter(media => media.filteredVersions(this.searchQuery, this.searchParams).length);
+            return this.media.filter(media => (!this.translator || media.type === "audio") && media.filteredVersions(this.searchQuery, this.searchParams).length);
         },
         hasPageItems() {
             return !!this.pageItems;
@@ -210,69 +210,70 @@ export default defineComponent({
             this.mediaCopied = true;
             this.mediaCopyTimeout = window.setTimeout(() => this.mediaCopied = false, 1500);
         },
-        updateSheetLink(e: Event) {
-            this.sheetLink = (e.target as HTMLInputElement).value;
-        },
-        updateSheetName(e: Event) {
-            this.sheetName = (e.target as HTMLInputElement).value;
-        },
-        async submitSheet() {
+        async fetchSheet(sheet: Sheet) {
             if (this.sheetFetched) this.undoSheet();
+            this.sheetFetching = true;
 
-            const regex = /\/d\/(.+)\//;
-            if (regex.test(this.sheetLink)) {
-                this.sheetFetching = true;
-                const id = regex.exec(this.sheetLink)![1];
+            const url = new URL(`https://docs.google.com/spreadsheets/d/${sheet.id}/gviz/tq`);
+            url.searchParams.set("tqx", "out:json");
+            url.searchParams.set("sheet", this.game.id.toLowerCase());
 
-                const url = new URL(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq`);
-                url.searchParams.set("tqx", "out:json");
-                if (this.sheetName.trim()) url.searchParams.set("sheet", this.sheetName);
+            const response = await fetch(url);
+            const raw = await response.text();
 
-                const response = await fetch(url);
-                const raw = await response.text();
+            type Column = { id: string; label: string; type: string; pattern?: string; };
+            type Cell = { v: any; f?: string; };
+            type Row = { c: Cell[]; };
+            type Table = { cols: Column[]; rows: Row[]; parsedNumHeaders: number; };
+            type Response = {
+                reqId: string;
+                sig: string;
+                status: string;
+                table: Table;
+                version: string;
+            };
 
-                type Column = { id: string; label: string; type: string; pattern?: string; };
-                type Cell = { v: any; f?: string; };
-                type Row = { c: Cell[]; };
-                type Table = { cols: Column[]; rows: Row[]; };
-
-                const data = JSON.parse(/^google.visualization.Query.setResponse\((.+)\);$/m.exec(raw)![1]) as { table: Table };
-
-                const { table: { cols, rows } } = data;
-
-                let lastColIndex = -1;
-                const getColIndex = (type: string, fallback: number) => {
-                    let index = cols.findIndex((col, index) => index > lastColIndex && col.type === type);
-                    if (index < 0) index = fallback;
-                    lastColIndex = index;
-                    return index;
-                };
-
-                const columnId = getColIndex("number", 0);
-                // const columnText = getColIndex("string", 1);
-                getColIndex("string", 1);
-                const columnDisplay = getColIndex("string", 2);
-
+            const data = JSON.parse(/^google.visualization.Query.setResponse\((.+)\);$/m.exec(raw)![1]) as Response;
+            if (data.sig == sheet.first) {
                 this.sheetFetching = false;
-                rows.forEach(row => {
-                    // console.log(row);
-                    const cells = row.c;
-                    const idCell = cells[columnId];
-                    // const textCell = cells[columnText];
-                    const displayCell = cells[columnDisplay];
-                    if (idCell && displayCell) {
-                        this.media.forEach(media => {
-                            const version = media.versions.find(version => version.id == idCell.v);
-                            if (version) {
-                                version.displayText = displayCell.v;
-                            }
-                        });
-                    }
-                });
-
-                this.sheetLink = "";
-                this.sheetFetched = true;
+                return;
             }
+
+            console.log(data);
+
+            const { table: { cols, rows } } = data;
+
+            let lastColIndex = -1;
+            const getColIndex = (type: string, fallback: number) => {
+                let index = cols.findIndex((col, index) => index > lastColIndex && col.type === type);
+                if (index < 0) index = fallback;
+                lastColIndex = index;
+                return index;
+            };
+
+            const columnId = getColIndex("number", 0);
+            // const columnText = getColIndex("string", 1);
+            getColIndex("string", 1);
+            const columnDisplay = getColIndex("string", 2);
+
+            this.sheetFetching = false;
+            rows.forEach(row => {
+                // console.log(row);
+                const cells = row.c;
+                const idCell = cells[columnId];
+                // const textCell = cells[columnText];
+                const displayCell = cells[columnDisplay];
+                if (idCell && displayCell) {
+                    this.media.forEach(media => {
+                        const version = media.versions.find(version => version.id == idCell.v);
+                        if (version) {
+                            version.displayText = displayCell.v;
+                        }
+                    });
+                }
+            });
+
+            this.sheetFetched = true;
         },
         undoSheet() {
             this.media.forEach(media => media.versions.forEach(version => delete version.displayText));
@@ -299,18 +300,11 @@ export default defineComponent({
         <div v-if="translator || sheetFetched" class="d-grid gap-2 col-6 mx-auto mb-5">
             <template v-if="translator">
                 <button class="btn btn-success" @click="copyMedia">{{ $t(mediaCopied ? "viewer.copy.copied" : "viewer.copy.button") }}</button>
-                <form @submit.prevent="submitSheet">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" :disabled="sheetFetching" :placeholder="$t('viewer.paste.placeholder')" :value="sheetLink" @input="updateSheetLink" />
-                        <button type="submit" class="btn btn-primary" :disabled="sheetFetching">{{ $t("viewer.paste.fetch") }}</button>
-                    </div>
-                    <label class="form-label">{{ $t("viewer.paste.name.label") }}</label>
-                    <input type="text" class="form-control" :disabled="sheetFetching" :placeholder="$t('viewer.paste.name.placeholder')" :value="sheetName" @input="updateSheetName" />
-                    <div class="form-text">{{ $t("viewer.paste.name.text") }}</div>
-                    <div class="form-text" v-html="$t('viewer.paste.name.warning')"></div>
-                </form>
+                <!-- <button class="btn btn-primary mb-3" :disabled="sheetFetching">{{ $t(sheetFetching ? "viewer.translator.fetching" : "viewer.translator.fetch") }}</button> -->
+                <p class="mt-4 mb-0">{{ $t(sheetFetching ? "viewer.translator.fetching" : "viewer.translator.fetch") }}</p>
+                <button class="btn btn-primary mb-3" v-for="lang in languagesWithSheets" :disabled="sheetFetching" @click="fetchSheet(lang.sheet!)">{{ lang.name }}</button>
             </template>
-            <button type="submit" class="btn btn-secondary" v-if="sheetFetched" @click="undoSheet">{{ $t("viewer.paste.undo") }}</button>
+            <button type="submit" class="btn btn-secondary" v-if="sheetFetched" @click="undoSheet">{{ $t("viewer.translator.undo") }}</button>
         </div>
         <div class="input-group mb-3">
             <input type="text" class="form-control" :placeholder="$t('viewer.search.placeholder')" :value="searchQuery" @input="updateSearch" />

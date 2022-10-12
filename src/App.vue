@@ -4,6 +4,7 @@ import Picker from "./components/Picker.vue";
 import { BundleItem, GameItem } from "./games";
 import Viewer from "./components/Viewer.vue";
 import { get, set } from "idb-keyval";
+import Languages, { getLanguage } from "./languages";
 
 export default defineComponent({
     data(): {
@@ -12,21 +13,19 @@ export default defineComponent({
             bundle: BundleItem;
             game: GameItem;
         };
-        languages: { locale: string; name: string; }[];
         translator: boolean;
     } {
         return {
             hasSelected: false,
-            languages: [
-                { locale: "en", name: "English" },
-                { locale: "de", name: "Deutsch" }
-            ],
             translator: false
         };
     },
     computed: {
+        languages() {
+            return Languages;
+        },
         language() {
-            return this.languages.find(lang => lang.locale === this.$i18n.locale)!;
+            return getLanguage(this.$i18n.locale);
         }
     },
     methods: {
