@@ -66,8 +66,8 @@
                 "copied": "Kopiert!"
             },
             "translator": {
-                "fetch": "Show translations for:",
-                "fetching": "Loading\u2026",
+                "fetch": "Öffne Übersetzungen für:",
+                "fetching": "Lade\u2026",
                 "undo": "Original anzeigen"
             },
             "search": {
