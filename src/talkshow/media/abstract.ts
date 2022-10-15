@@ -5,7 +5,6 @@ const strip = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, "");
 abstract class AbstractMedia implements IMedia {
     id: number;
     versions: IMediaVersion[] = [];
-    displayText?: string;
 
     constructor(id: number) {
         this.id = id;

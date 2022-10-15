@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 import Picker from "./components/Picker.vue";
 import { BundleItem, GameItem } from "./games";
 import Viewer from "./components/Viewer.vue";
-import { get, set } from "idb-keyval";
+import { getMany, set } from "idb-keyval";
 import Languages, { getLanguage } from "./languages";
 
 export default defineComponent({
@@ -47,9 +47,8 @@ export default defineComponent({
         }
     },
     async mounted() {
-        const locale = await get("locale");
+        const [locale, translator] = await getMany(["locale", "translator"]);
         if (locale) this.$i18n.locale = locale;
-        const translator = await get("translator");
         if (translator) this.translator = true;
     },
     components: { Picker, Viewer }
