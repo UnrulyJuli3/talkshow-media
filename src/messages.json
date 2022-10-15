@@ -93,5 +93,50 @@
                 "metadata": "Metadaten:"
             }
         }
+    },
+    "es": {
+        "translatorMode": "Modo de traductor",
+        "picker": {
+            "game": {
+                "unsupported": "No soportado",
+                "incomplete": "Próximamente",
+                "view": "Ver",
+                "names": {}
+            }
+        },
+        "viewer": {
+            "exit": "Volver a la selección",
+            "copy": {
+                "button": "Copiar medios para Google Sheets",
+                "copied": "¡Copiado!"
+            },
+            "translator": {
+                "fetch": "Mostrar traducciones para:",
+                "fetching": "Cargando\u2026",
+                "undo": "Mostrar el original"
+            },
+            "search": {
+                "placeholder": "Introduce la consulta\u2026"
+            },
+            "pages": {
+                "previous": "Anterior",
+                "next": "Siguiente"
+            },
+            "headers": {
+                "id": "ID",
+                "locale": "Localidad",
+                "tag": "Etiqueta(s)",
+                "text": "Texto",
+                "actions": "Acciones"
+            },
+            "empty": "No hay elementos que mostrar",
+            "info": {
+                "media": "Versión {version} de medios {media}",
+                "locale": "Localidad:",
+                "tag": "Etiqueta(s):",
+                "text": "Texto en bruto:",
+                "metadata": "Metadatos:"
+            }
+        }
     }
 }

@@ -21,6 +21,10 @@ const Languages: Language[] = [
             id: "1MCyze-GF1tA_FGtt8hs_FyxHeBIPLABEQyJ82BNsJ40",
             first: "1432769374"
         }
+    },
+    {
+        locale: "es",
+        name: "Espa\u00f1ol"
     }
 ];
 
