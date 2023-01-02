@@ -60,8 +60,8 @@ class Export {
         const response = await fetch(this.resourcePath + "data.json");
         const exp = await response.json() as ExportData;
 
-        console.log(this);
-        console.log(exp);
+        // console.log(this);
+        // console.log(exp);
         this.timestamp = new Date(exp.timeStamp);
 
         const dict = exp.dict.split("^");
@@ -70,28 +70,28 @@ class Export {
 
         this.media = MediaFactory.buildMedia(exp.media, dict, this.game.version!);
 
-        this.flowcharts = exp.flowcharts.text.split("^").map(data => {
+        this.flowcharts = exp.flowcharts.text ? exp.flowcharts.text.split("^").map(data => {
             const parts = new Parts(data, "|");
             const id = parts.number();
             const name = dict[parts.number()];
             const type = parts.number();
             const project = parts.number();
             return new Flowchart(id, project, type === 1, exp.flowcharts.data[id]);
-        });
+        }) : [];
 
-        const packages = exp.packages.split("^").map(data => {
+        const packages = exp.packages ? exp.packages.split("^").map(data => {
             const parts = new Parts(data, "|");
             const pkgid = parts.number();
             const name = dict[parts.number()];
             const type = parts.string() as ActionPackageType;
             const parent = parts.number();
             return new ActionPackageRef(type, pkgid, name);
-        });
+        }) : [];
 
-        console.log(packages);
+        // console.log(packages);
         this.packages = packages;
 
-        const actions = exp.actions.split("^").map(data => {
+        const actions = exp.actions ? exp.actions.split("^").map(data => {
             const parts = new Parts(data, "|");
             const id = parts.number();
             const name = dict[parts.number()];
@@ -101,11 +101,11 @@ class Export {
             pkg.addAction(action);
             while (parts.has) action.addParameter(new Parameter(dict[parts.number()], parts.string() as ParameterType));
             return action;
-        });
+        }) : [];
 
-        console.log(actions);
+        // console.log(actions);
 
-        this.templates = exp.templates.split("^").map(data => {
+        this.templates = exp.templates ? exp.templates.split("^").map(data => {
             const parts = new Parts(data, "|");
             const tid = parts.number();
             const parent = parts.number();
@@ -121,9 +121,9 @@ class Export {
                 return new TemplateField(id, name, type, def, dict[fparts.number()]);
             });
             return new Template(tid, name, params, fields);
-        });
+        }) : [];
 
-        console.log(this.templates);
+        // console.log(this.templates);
     }
 
     getAudioPath(id: number) {
