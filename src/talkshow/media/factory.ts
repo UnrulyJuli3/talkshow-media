@@ -1,14 +1,15 @@
 import { IMedia } from "../api";
+import Parts from "../parts";
 import { AudioMedia } from "./audio";
 import { TextMedia } from "./text";
 
 class MediaFactory {
     static buildMedia(param2: string, param3: string[], version: number): IMedia[] {
         return param2.split("^").map(loc6 => {
-            const loc7 = loc6.split("|");
-            const loc8 = parseInt(loc7.shift()!);
-            const loc9 = loc7.shift()!;
-            const loc10 = parseInt(loc7.shift()!);
+            const parts = new Parts(loc6, "|");
+            const loc8 = parts.number();
+            const loc9 = parts.string();
+            const loc10 = parts.number();
             let loc11: IMedia;
             switch (loc9) {
                 case "A": loc11 = new AudioMedia(loc8); break;
@@ -18,8 +19,8 @@ class MediaFactory {
 
             const supportsLocale = version >= 2;
             for (let i = 0; i < loc10; i++) {
-                loc11.addVersion(i, parseInt(loc7.shift()!), supportsLocale ? loc7.shift()! : null, param3[parseInt(loc7.shift()!)], param3[parseInt(loc7.shift()!)]);
-                loc7.shift(); // not required for our purposes (or any purposes anymore, i think)
+                loc11.addVersion(i, parts.number(), supportsLocale ? parts.string() : null, param3[parts.number()], param3[parts.number()]);
+                parts.skip(); // not required for our purposes (or any purposes anymore, i think)
             }
 
             return loc11;

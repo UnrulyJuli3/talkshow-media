@@ -1,7 +1,13 @@
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
+import { createRouter, createWebHistory } from "vue-router";
+
 import "./style.scss";
 import App from "./App.vue";
-import { createI18n } from "vue-i18n";
+import MediaRoute from "./components/MediaRoute.vue";
+import DetailsRoute from "./components/DetailsRoute.vue";
+import DetailsPicker from "./components/DetailsPicker.vue";
+import DetailsView from "./components/DetailsView.vue";
 import messages from "./messages.json";
 
 const i18n = createI18n({
@@ -10,8 +16,37 @@ const i18n = createI18n({
     messages
 });
 
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        {
+            path: "/",
+            redirect: "/media"
+        },
+        {
+            path: "/media",
+            component: MediaRoute
+        },
+        {
+            path: "/details",
+            component: DetailsRoute,
+            children: [
+                {
+                    path: "",
+                    component: DetailsPicker
+                },
+                {
+                    path: ":bundle/:game",
+                    component: DetailsView
+                }
+            ]
+        }
+    ]
+});
+
 const app = createApp(App);
 app.use(i18n);
+app.use(router);
 app.mount("#app");
 
 // <table><tr><th>Media ID</th><th>Text</th></tr><tr><td style="font-size:14pt;font-weight:bold;white-space:nowrap;border-top:2px solid #000;">123456</td><td>bar</td></tr></table>
