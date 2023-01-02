@@ -1,9 +1,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { GameItem, Status } from "../games";
+import { BundleItem, GameItem, Status } from "../games";
 
 export default defineComponent({
     props: {
+        bundle: {
+            type: Object as PropType<BundleItem>,
+            required: true
+        },
         info: {
             type: Object as PropType<GameItem>,
             required: true
@@ -16,7 +20,7 @@ export default defineComponent({
     },
     computed: {
         nameKey() {
-            return `picker.game.names.${this.info.id.toLowerCase()}`;
+            return `picker.game.names.${this.bundle.id}/${this.info.id.toLowerCase()}`;
         },
         canView() {
             return !this.info.status;
@@ -38,7 +42,7 @@ export default defineComponent({
         <div class="card-body">
             <h5 class="card-title mb-3">{{ $te(nameKey) ? $t(nameKey) : info.name }}</h5>
             <div class="d-grid">
-                <button :class="`btn btn-${canView ? 'primary' : 'secondary' }`" :disabled="!canView" @click="select">{{ viewText }}</button>
+                <button :class="`btn btn-${canView ? 'primary' : 'secondary'}`" :disabled="!canView" @click="select">{{ viewText }}</button>
             </div>
         </div>
     </div>

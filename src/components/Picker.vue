@@ -23,7 +23,7 @@ export default defineComponent({
         <div class="py-4" v-for="bundle in bundleList" :key="bundle.id">
             <h1 class="text-center py-4">{{ bundle.name }}</h1>
             <div class="card-group">
-                <PickerGame v-for="game in bundle.games" :info="game" @select="select(bundle, game)" />
+                <PickerGame v-for="game in bundle.games" :bundle="bundle" :info="game" @select="select(bundle, game)" />
             </div>
         </div>
     </div>

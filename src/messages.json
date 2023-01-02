@@ -52,10 +52,10 @@
                 "incomplete": "Bald verfügbar",
                 "view": "Öffnen",
                 "names": {
-                    "overdrawn": "Kritzel Witzel",
-                    "everyday": "Die Teufel im Detail",
-                    "surveybomb": "Die Poll Mine",
-                    "thewheel": "Das Rad von unglaublicher Größe"
+                    "pp4/overdrawn": "Kritzel Witzel",
+                    "pp7/everyday": "Die Teufel im Detail",
+                    "pp8/surveybomb": "Die Poll Mine",
+                    "pp8/thewheel": "Das Rad von unglaublicher Größe"
                 }
             }
         },
@@ -136,6 +136,51 @@
                 "tag": "Etiqueta(s):",
                 "text": "Texto en bruto:",
                 "metadata": "Metadatos:"
+            }
+        }
+    },
+    "ru": {
+        "translatorMode": "Режим переводчика",
+        "picker": {
+            "game": {
+                "unsupported": "Не поддерживается",
+                "incomplete": "Скоро",
+                "view": "Посмотреть",
+                "names": {}
+            }
+        },
+        "viewer": {
+            "exit": "Вернуться к выбору",
+            "copy": {
+                "button": "Скопировать основные фразы в Google Таблицы",
+                "copied": "Скопировано!"
+            },
+            "translator": {
+                "fetch": "Показывать переводы для:",
+                "fetching": "Загрузка",
+                "undo": "Показать оригинал"
+            },
+            "search": {
+                "placeholder": "Введите значение..."
+            },
+            "pages": {
+                "previous": "Пред.",
+                "next": "След."
+            },
+            "headers": {
+                "id": "ID",
+                "locale": "Язык",
+                "tag": "Тег(и)",
+                "text": "Фразы",
+                "actions": "Действия"
+            },
+            "empty": "Ничего не было найдено",
+            "info": {
+                "media": "Версия {version} основных фраз {media}",
+                "locale": "Язык:",
+                "tag": "Тег(и):",
+                "text": "Необработанный текст:",
+                "metadata": "Метаданные:"
             }
         }
     }

@@ -25,6 +25,10 @@ const Languages: Language[] = [
     {
         locale: "es",
         name: "Espa\u00f1ol"
+    },
+    {
+        locale: "ru",
+        name: "Russian"
     }
 ];
 

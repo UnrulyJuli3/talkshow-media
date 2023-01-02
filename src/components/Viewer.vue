@@ -52,7 +52,7 @@ export default defineComponent({
             return Languages.filter(lang => lang.sheet);
         },
         gameNameKey() {
-            return `picker.game.names.${this.game.id.toLowerCase()}`;
+            return `picker.game.names.${this.bundle.id}/${this.game.id.toLowerCase()}`;
         },
         exportObject() {
             return this.export!;
