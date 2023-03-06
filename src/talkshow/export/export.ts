@@ -68,7 +68,7 @@ class Export {
         this.workspaceName = dict[exp.w];
         this.projectName = dict[exp.p];
 
-        this.media = MediaFactory.buildMedia(exp.media, dict, this.game.version!);
+        this.media = MediaFactory.buildMedia(exp.media, dict, this.game.version);
 
         this.flowcharts = exp.flowcharts.text ? exp.flowcharts.text.split("^").map(data => {
             const parts = new Parts(data, "|");
@@ -127,7 +127,7 @@ class Export {
     }
 
     getAudioPath(id: number) {
-        return this.resourcePath + id + ".ogg";
+        return this.resourcePath + id + "." + (this.bundle.id === "ydkj2011" ? "wav" : "ogg");
     }
 }
 

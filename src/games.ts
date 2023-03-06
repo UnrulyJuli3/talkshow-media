@@ -67,7 +67,8 @@ import quiplash from "./banners/quiplash.webp";
 import quiplash2international from "./banners/quiplash2international.webp";
 import drawful2 from "./banners/drawful2.webp";
 
-export type TalkshowVersion = 1 | 2;
+// ydkj2011
+import ydkj2011 from "./banners/ydkj2011.jpg";
 
 export type BundleItem = {
     id: string;
@@ -78,7 +79,7 @@ export type BundleItem = {
 export type GameItem = {
     id: string;
     name: string;
-    version?: TalkshowVersion;
+    version: number;
     status?: Status;
     banner?: string;
 };
@@ -195,11 +196,11 @@ const BundleList: BundleItem[] = [
         id: "pp2",
         name: "The Jackbox Party Pack 2",
         games: [
-            { id: "Auction", name: "Bidiots", version: 1, banner: Auction },
-            { id: "BombInterns", name: "Bomb Corp.", version: 1, banner: BombInterns },
-            { id: "Earwax", name: "Earwax", version: 1, banner: Earwax },
-            { id: "Fibbage2", name: "Fibbage 2", version: 1, banner: Fibbage2 },
-            { id: "Quiplash", name: "Quiplash XL", version: 1, banner: QuiplashXL }
+            { id: "Auction", name: "Bidiots", version: 2, banner: Auction },
+            { id: "BombInterns", name: "Bomb Corp.", version: 2, banner: BombInterns },
+            { id: "Earwax", name: "Earwax", version: 2, banner: Earwax },
+            { id: "Fibbage2", name: "Fibbage 2", version: 2, banner: Fibbage2 },
+            { id: "Quiplash", name: "Quiplash XL", version: 2, banner: QuiplashXL }
         ]
     },
     {
@@ -208,19 +209,27 @@ const BundleList: BundleItem[] = [
         games: [
             { id: "Drawful", name: "Drawful", version: 1, banner: Drawful },
             { id: "YDKJ2015", name: "YOU DON\u2019T KNOW JACK 2015", version: 1, banner: YDKJ2015 },
-            { id: "LieSwatterParty", name: "Lie Swatter", status: Status.Unsupported, banner: LieSwatterParty },
-            { id: "WordSpud", name: "Word Spud", status: Status.Unsupported, banner: WordSpud },
+            { id: "LieSwatterParty", name: "Lie Swatter", status: Status.Unsupported, version: -1, banner: LieSwatterParty },
+            { id: "WordSpud", name: "Word Spud", status: Status.Unsupported, version: -1, banner: WordSpud },
             { id: "Fibbage", name: "Fibbage XL", version: 1, banner: FibbageXLParty }
         ]
     },
     {
         id: "standalone",
-        name: "standalone",
+        name: "Standalone Titles",
         games: [
             { id: "fibbage", name: "Fibbage XL", version: 1, banner: fibbageStandalone },
             { id: "quiplash", name: "Quiplash", version: 1, banner: quiplash },
             { id: "quiplash2international", name: "Quiplash 2 InterLASHional", version: 1, banner: quiplash2international },
             { id: "drawful2", name: "Drawful 2", version: 1, banner: drawful2 }
+        ]
+    },
+    {
+        id: "ydkj2011",
+        name: "YOU DON\u2019T KNOW JACK\u00ae",
+        games: [
+            { id: "menutest", name: "YOU DON\u2019T KNOW JACK\u00ae: Menu & Lobby", version: 1, banner: ydkj2011 },
+            { id: "episode", name: "YOU DON\u2019T KNOW JACK\u00ae: Main Game", version: 1, banner: ydkj2011 }
         ]
     }
 ];
