@@ -18,6 +18,8 @@ class Flowchart {
     project: number;
     isSubroutine: boolean;
     name?: string;
+    public media?: string;
+    public dict?: string;
 
     constructor(id: number, project: number, isSubroutine: boolean, data: FlowchartData) {
         this.id = id;
@@ -29,6 +31,8 @@ class Flowchart {
     parseFlowchartData(exp: FlowchartData) {
         // const dict = exp.dict.split("^");
         this.name = exp.fname;
+        this.media = exp.media;
+        this.dict = exp.dict;
 
         /* const cells = exp.cells.split("^").map(data => {
             const parts = new Parts(data, "|");

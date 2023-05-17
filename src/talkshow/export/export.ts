@@ -79,6 +79,11 @@ class Export {
             return new Flowchart(id, project, type === 1, exp.flowcharts.data[id]);
         }) : [];
 
+        this.flowcharts.forEach(flow => {
+            if (!flow.media || !flow.dict) return;
+            this.media?.push(...MediaFactory.buildMedia(flow.media, flow.dict.split("^"), this.game.version));
+        });
+
         const packages = exp.packages ? exp.packages.split("^").map(data => {
             const parts = new Parts(data, "|");
             const pkgid = parts.number();
