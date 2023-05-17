@@ -4,7 +4,10 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import "./style.scss";
 import App from "./App.vue";
+import MediaRouteLegacy from "./components-legacy/MediaRoute.vue";
 import MediaRoute from "./components/MediaRoute.vue";
+import MediaPicker from "./components/MediaPicker.vue";
+import MediaView from "./components/MediaView.vue";
 import DetailsRoute from "./components/DetailsRoute.vue";
 import DetailsPicker from "./components/DetailsPicker.vue";
 import DetailsView from "./components/DetailsView.vue";
@@ -24,8 +27,22 @@ const router = createRouter({
             redirect: "/media"
         },
         {
+            path: "/media-legacy",
+            component: MediaRouteLegacy
+        },
+        {
             path: "/media",
-            component: MediaRoute
+            component: MediaRoute,
+            children: [
+                {
+                    path: "",
+                    component: MediaPicker
+                },
+                {
+                    path: ":bundle/:game",
+                    component: MediaView
+                }
+            ]
         },
         {
             path: "/details",
