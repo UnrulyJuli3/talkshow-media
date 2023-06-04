@@ -11,6 +11,7 @@ import MediaView from "./components/MediaView.vue";
 import DetailsRoute from "./components/DetailsRoute.vue";
 import DetailsPicker from "./components/DetailsPicker.vue";
 import DetailsView from "./components/DetailsView.vue";
+import ListToArrayUtil from "./components/ListToArrayUtil.vue";
 import messages from "./messages.json";
 
 const i18n = createI18n({
@@ -57,6 +58,10 @@ const router = createRouter({
                     component: DetailsView
                 }
             ]
+        },
+        {
+            path: "/array-gen",
+            component: ListToArrayUtil
         }
     ]
 });
