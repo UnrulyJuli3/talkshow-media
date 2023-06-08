@@ -132,7 +132,7 @@ class Export {
     }
 
     getAudioPath(id: number) {
-        return this.resourcePath + id + "." + (this.bundle.id === "ydkj2011" ? "wav" : "ogg");
+        return this.resourcePath + id + "." + (["ydkj2011", "jack-ios"].includes(this.bundle.id) ? "wav" : "ogg");
     }
 }
 

@@ -70,6 +70,10 @@ import drawful2 from "./banners/drawful2.webp";
 // ydkj2011
 import ydkj2011 from "./banners/ydkj2011.jpg";
 
+// jack ios
+// import jackFacebook from "./banners/jackFacebook.webp";
+import jackiOS from "./banners/jackiOS.png";
+
 export type BundleItem = {
     id: string;
     name: string;
@@ -230,6 +234,14 @@ const BundleList: BundleItem[] = [
         games: [
             { id: "menutest", name: "YOU DON\u2019T KNOW JACK\u00ae: Menu & Lobby", version: 1, banner: ydkj2011 },
             { id: "episode", name: "YOU DON\u2019T KNOW JACK\u00ae: Main Game", version: 1, banner: ydkj2011 }
+        ]
+    },
+    {
+        id: "jack-ios",
+        name: "YOU DON\u2019T KNOW JACK\u00ae (iOS)",
+        games: [
+            { id: "main", name: "YDKJ iOS", version: 1, banner: jackiOS },
+            { id: "facebook", name: "YDKJ Facebook for iOS", version: 1, banner: jackiOS }
         ]
     }
 ];
