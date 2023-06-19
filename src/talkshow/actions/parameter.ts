@@ -1,4 +1,4 @@
-enum ParameterType {
+/* enum ParameterType {
     Audio = "A",
     Boolean = "B",
     Graphic = "G",
@@ -6,15 +6,15 @@ enum ParameterType {
     Number = "N",
     String = "S",
     Text = "T"
-}
+} */
 
-export { ParameterType };
+// export { ParameterType };
 
 class Parameter {
     public name: string;
-    public type: ParameterType;
+    public type: string;
 
-    constructor(name: string, type: ParameterType) {
+    constructor(name: string, type: string) {
         this.name = name;
         this.type = type;
     }

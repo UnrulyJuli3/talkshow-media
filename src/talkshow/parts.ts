@@ -5,7 +5,7 @@ class Parts {
         this.parts = data.split(delimiter);
     }
 
-    public get has() {
+    public get has(): boolean {
         return this.parts.length > 0;
     }
 
@@ -16,9 +16,13 @@ class Parts {
         }
     }
 
+    public hasAt(index: number): boolean {
+        return index >= 0 && index < this.parts.length;
+    }
+
     public string(index?: number): string {
         if (index !== undefined) {
-            if (index < 0 || index >= this.parts.length) throw new Error(`No part at index ${index}`);
+            if (!this.hasAt(index)) throw new Error(`No part at index ${index}`);
             return this.parts[index];
         }
 

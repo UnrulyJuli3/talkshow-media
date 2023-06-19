@@ -239,7 +239,7 @@ export default defineComponent({
                 return;
             }
 
-            console.log(data);
+            // console.log(data);
 
             const { table: { cols, rows } } = data;
 

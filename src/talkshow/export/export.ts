@@ -3,7 +3,7 @@
 import { BundleItem, GameItem } from "../../games";
 import Action from "../actions/action";
 import ActionPackageRef, { ActionPackageType } from "../actions/actionPackageRef";
-import Parameter, { ParameterType } from "../actions/parameter";
+import Parameter from "../actions/parameter";
 import { IMedia } from "../api";
 import MediaFactory from "../media/factory";
 import Parts from "../parts";
@@ -42,6 +42,7 @@ class Export {
     public packages?: ActionPackageRef[];
     public flowcharts?: Flowchart[];
     public templates?: Template[];
+    public actions?: Action[];
 
     private get resourcePath() {
         return `https://talkshow-sid3r.s3.us-west-1.amazonaws.com/talkshow/${this.bundle.id}-${this.game.id}/`;
@@ -54,6 +55,11 @@ class Export {
 
     private static adjust(num: number) {
         return num < 0 ? num + 16384 : num;
+    }
+
+    public getAction(id: number) {
+        if (!this.actions) return;
+        return this.actions.find(a => a.id === id);
     }
 
     async load() {
@@ -69,20 +75,6 @@ class Export {
         this.projectName = dict[exp.p];
 
         this.media = MediaFactory.buildMedia(exp.media, dict, this.game.version);
-
-        this.flowcharts = exp.flowcharts.text ? exp.flowcharts.text.split("^").map(data => {
-            const parts = new Parts(data, "|");
-            const id = parts.number();
-            const name = dict[parts.number()];
-            const type = parts.number();
-            const project = parts.number();
-            return new Flowchart(id, project, type === 1, exp.flowcharts.data[id]);
-        }) : [];
-
-        this.flowcharts.forEach(flow => {
-            if (!flow.media || !flow.dict) return;
-            this.media?.push(...MediaFactory.buildMedia(flow.media, flow.dict.split("^"), this.game.version));
-        });
 
         const packages = exp.packages ? exp.packages.split("^").map(data => {
             const parts = new Parts(data, "|");
@@ -104,10 +96,11 @@ class Export {
             const pkg = packages.find(p => p.id === pkgid)!;
             const action = new Action(id, name, pkg);
             pkg.addAction(action);
-            while (parts.has) action.addParameter(new Parameter(dict[parts.number()], parts.string() as ParameterType));
+            while (parts.has) action.addParameter(new Parameter(dict[parts.number()], parts.string()));
             return action;
         }) : [];
 
+        this.actions = actions;
         // console.log(actions);
 
         this.templates = exp.templates ? exp.templates.split("^").map(data => {
@@ -128,6 +121,19 @@ class Export {
             return new Template(tid, name, params, fields);
         }) : [];
 
+        this.flowcharts = exp.flowcharts.text ? exp.flowcharts.text.split("^").map(data => {
+            const parts = new Parts(data, "|");
+            const id = parts.number();
+            const name = dict[parts.number()];
+            const type = parts.number();
+            const project = parts.number();
+            return new Flowchart(this, id, project, type === 1, exp.flowcharts.data[id]);
+        }) : [];
+
+        this.flowcharts.forEach(flow => {
+            if (!flow.media || !flow.dict) return;
+            this.media?.push(...MediaFactory.buildMedia(flow.media, flow.dict.split("^"), this.game.version));
+        });
         // console.log(this.templates);
     }
 

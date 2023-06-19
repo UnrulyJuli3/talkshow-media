@@ -2,9 +2,10 @@
 import { defineComponent } from "vue";
 import BundleList from "../games";
 import { ActionPackageType } from "../talkshow/actions/actionPackageRef";
-import { ParameterType } from "../talkshow/actions/parameter";
+// import { ParameterType } from "../talkshow/actions/parameter";
 import Export from "../talkshow/export/export";
 import { FieldType } from "../talkshow/templates/templateField";
+import DetailsCells from "./DetailsCells.vue";
 
 export default defineComponent({
     data(): {
@@ -35,9 +36,11 @@ export default defineComponent({
     },
     computed: {
         packages() {
-            if (!this.exp) return [];
+            if (!this.exp)
+                return [];
             const packages = this.exp.packages!;
-            if (!this.showAllPackages) return packages.filter(pkg => pkg.type === ActionPackageType.Swf);
+            if (!this.showAllPackages)
+                return packages.filter(pkg => pkg.type === ActionPackageType.Swf);
             return packages;
         }
     },
@@ -61,27 +64,34 @@ export default defineComponent({
                 case FieldType.String: return "String";
             }
         },
-        getActionParamTypeName(type: ParameterType) {
+        getActionParamTypeName(type: string) {
             switch (type) {
-                case ParameterType.Audio: return "Audio";
-                case ParameterType.Boolean: return "Boolean";
-                case ParameterType.Graphic: return "Graphic";
-                case ParameterType.List: return "List";
-                case ParameterType.Number: return "Number";
-                case ParameterType.String: return "String";
-                case ParameterType.Text: return "Text";
+                case "A": return "Audio";
+                case "B": return "Boolean";
+                case "G": return "Graphic";
+                case "L": return "List";
+                case "N": return "Number";
+                case "S": return "String";
+                case "T": return "Text";
             }
         }
     },
     async mounted() {
         const bundle = BundleList.find(bundle => bundle.id === this.$route.params.bundle);
-        if (!bundle) { this.back(); return; }
+        if (!bundle) {
+            this.back();
+            return;
+        }
         const game = bundle.games.find(game => game.id === this.$route.params.game);
-        if (!game) { this.back(); return; }
+        if (!game) {
+            this.back();
+            return;
+        }
         this.exp = new Export(bundle, game);
         await this.exp.load();
         this.loaded = true;
-    }
+    },
+    components: { DetailsCells }
 });
 </script>
 
@@ -190,12 +200,20 @@ export default defineComponent({
                 <tbody>
                     <tr v-for="flowchart in exp!.flowcharts">
                         <th scope="row">{{ flowchart.id }}</th>
-                        <td>{{ flowchart.name }}</td>
+                        <td v-if="showDetails"><a :href="`#flowchart-${flowchart.id}-details`">{{ flowchart.name }}</a></td>
+                        <td v-else>{{ flowchart.name }}</td>
                         <td>{{ flowchart.isSubroutine ? 'Subroutine' : 'Flowchart' }}</td>
                         <td v-if="showFilePaths"><code>project/data/F_{{ flowchart.id }}.swf</code></td>
                     </tr>
                 </tbody>
             </table>
+            <template v-if="showDetails">
+                <h1 class="mb-3 mt-5">Details</h1>
+                <template v-for="flowchart in exp!.flowcharts">
+                    <h4 class="mb-3 pt-3" :id="`flowchart-${flowchart.id}-details`">{{ flowchart.name }}</h4>
+                    <DetailsCells :flowchart="flowchart" />
+                </template>
+            </template>
         </template>
         <template v-if="currentPage === 'templates'">
             <h2 class="mb-3 mt-4">Templates</h2>

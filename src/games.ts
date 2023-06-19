@@ -232,8 +232,10 @@ const BundleList: BundleItem[] = [
         id: "ydkj2011",
         name: "YOU DON\u2019T KNOW JACK\u00ae",
         games: [
-            { id: "menutest", name: "YOU DON\u2019T KNOW JACK\u00ae: Menu & Lobby", version: 1, banner: ydkj2011 },
-            { id: "episode", name: "YOU DON\u2019T KNOW JACK\u00ae: Main Game", version: 1, banner: ydkj2011 }
+            { id: "menutest", name: "(PC) YDKJ\u00ae: Menu & Lobby", version: 1, banner: ydkj2011 },
+            { id: "episode", name: "(PC) YDKJ\u00ae: Main Game", version: 1, banner: ydkj2011 },
+            { id: "xbox-menutest", name: "(Xbox 360) YDKJ\u00ae: Menu & Lobby", version: 1, banner: ydkj2011 },
+            { id: "xbox-episode", name: "(Xbox 360) YDKJ\u00ae: Main Game", version: 1, banner: ydkj2011 },
         ]
     },
     {
