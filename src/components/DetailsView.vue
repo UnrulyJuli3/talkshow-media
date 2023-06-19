@@ -211,7 +211,7 @@ export default defineComponent({
                 <h1 class="mb-3 mt-5">Details</h1>
                 <template v-for="flowchart in exp!.flowcharts">
                     <h4 class="mb-3 pt-3" :id="`flowchart-${flowchart.id}-details`">{{ flowchart.name }}</h4>
-                    <DetailsCells :flowchart="flowchart" />
+                    <DetailsCells :flowchart="(flowchart as any)" />
                 </template>
             </template>
         </template>
