@@ -55,7 +55,13 @@ export default defineComponent({
         },
         hasTags() {
             return this.visibleMedia.some(media => media.versions.some(version => version.tag));
-        }
+        },
+        numColumns() {
+            let num: number = 3;
+            if (this.hasLocales) num++;
+            if (this.hasTags) num++;
+            return num;
+        },
     },
     emits: ["exit"],
     methods: {
@@ -99,6 +105,9 @@ export default defineComponent({
                 </thead>
                 <tbody>
                     <template v-for="media in visibleMedia" :key="media.id">
+                        <tr class="media-separator">
+                            <td :colspan="numColumns"><strong>{{ media.id }}</strong> ({{ media.type }})</td>
+                        </tr>
                         <ViewerVersion v-for="(version, index) in media.filteredVersions(searchQuery, searchParams)"
                             :key="version.id"
                             :has-locales="hasLocales"
@@ -120,8 +129,10 @@ table {
     min-width: 900px;
 }
 
-tbody>tr.media-separator:not(:first-child) {
-    border-top: 2px solid var(--bs-table-color);
+tbody>tr.media-separator {
+    $border: 2px solid var(--bs-table-color);
+    border-top: $border;
+    border-bottom: $border;
 }
 
 td.locale {

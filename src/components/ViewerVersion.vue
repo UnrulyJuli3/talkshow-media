@@ -59,7 +59,7 @@ export default defineComponent({
 </script>
     
 <template>
-    <tr :class="{ 'media-separator': !index }">
+    <tr>
         <th scope="row">{{ version.id }}</th>
         <td v-if="hasLocales" class="locale">{{ version.locale }}</td>
         <td v-if="hasTags"><code v-if="version.tag">{{ version.tag }}</code></td>
