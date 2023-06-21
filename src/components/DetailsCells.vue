@@ -10,7 +10,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        // console.log(this.flowchart);
+        console.log(this.flowchart);
     },
 });
 </script>
