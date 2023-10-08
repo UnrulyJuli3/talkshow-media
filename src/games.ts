@@ -1,3 +1,10 @@
+// Pack 10
+import RiskyText from "./banners/RiskyText.png";
+import AwShirt2 from "./banners/AwShirt2.png";
+import NopusOpus from "./banners/NopusOpus.png";
+import TimeTrivia from "./banners/TimeTrivia.jpg";
+import UsThem from "./banners/UsThem.png";
+
 // Pack 9
 import AntiqueGame from "./banners/AntiqueGame.webp";
 import Fibbage4 from "./banners/Fibbage4.webp";
@@ -94,6 +101,17 @@ export enum Status {
 }
 
 const BundleList: BundleItem[] = [
+    {
+        id: "pp10-demo",
+        name: "The Jackbox Party Pack 10 Demo",
+        games: [
+            { id: "RiskyText", name: "FixyText", version: 2, banner: RiskyText },
+            { id: "AwShirt2", name: "Tee K.O. 2", version: 2, status: Status.Incomplete, banner: AwShirt2 },
+            { id: "NopusOpus", name: "Dodo Re Mi", version: 2, banner: NopusOpus },
+            { id: "TimeTrivia", name: "Timejinx", version: 2, status: Status.Incomplete, banner: TimeTrivia },
+            { id: "UsThem", name: "Hypnotorious", version: 2, status: Status.Incomplete, banner: UsThem },
+        ]
+    },
     /* {
         id: "pp9-demo",
         name: "The Jackbox Party Pack 9 Demo",
