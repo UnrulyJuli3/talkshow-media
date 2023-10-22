@@ -102,6 +102,17 @@ export enum Status {
 
 const BundleList: BundleItem[] = [
     {
+        id: "pp10",
+        name: "The Jackbox Party Pack 10",
+        games: [
+            { id: "RiskyText", name: "FixyText", version: 2, banner: RiskyText },
+            { id: "AwShirt2", name: "Tee K.O. 2", version: 2, banner: AwShirt2 },
+            { id: "NopusOpus", name: "Dodo Re Mi", version: 2, banner: NopusOpus },
+            { id: "TimeTrivia", name: "Timejinx", version: 2, banner: TimeTrivia },
+            { id: "UsThem", name: "Hypnotorious", version: 2, banner: UsThem },
+        ]
+    },
+    /* {
         id: "pp10-demo",
         name: "The Jackbox Party Pack 10 Demo",
         games: [
@@ -111,7 +122,7 @@ const BundleList: BundleItem[] = [
             { id: "TimeTrivia", name: "Timejinx", version: 2, status: Status.Incomplete, banner: TimeTrivia },
             { id: "UsThem", name: "Hypnotorious", version: 2, status: Status.Incomplete, banner: UsThem },
         ]
-    },
+    }, */
     /* {
         id: "pp9-demo",
         name: "The Jackbox Party Pack 9 Demo",
