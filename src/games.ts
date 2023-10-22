@@ -109,7 +109,7 @@ const BundleList: BundleItem[] = [
             { id: "AwShirt2", name: "Tee K.O. 2", version: 2, banner: AwShirt2 },
             { id: "NopusOpus", name: "Dodo Re Mi", version: 2, banner: NopusOpus },
             { id: "TimeTrivia", name: "Timejinx", version: 2, banner: TimeTrivia },
-            { id: "UsThem", name: "Hypnotorious", version: 2, banner: UsThem },
+            { id: "Strangers", name: "Hypnotorious", version: 2, banner: UsThem },
         ]
     },
     /* {
