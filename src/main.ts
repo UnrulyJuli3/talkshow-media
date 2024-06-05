@@ -2,17 +2,16 @@ import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import { createRouter, createWebHistory } from "vue-router";
 
-import "./style.scss";
 import App from "./App.vue";
 import MediaRouteLegacy from "./components-legacy/MediaRoute.vue";
-import MediaRoute from "./components/MediaRoute.vue";
-import MediaPicker from "./components/MediaPicker.vue";
-import MediaView from "./components/MediaView.vue";
-import DetailsRoute from "./components/DetailsRoute.vue";
 import DetailsPicker from "./components/DetailsPicker.vue";
+import DetailsRoute from "./components/DetailsRoute.vue";
 import DetailsView from "./components/DetailsView.vue";
 import ListToArrayUtil from "./components/ListToArrayUtil.vue";
+import MediaPicker from "./components/MediaPicker.vue";
+import MediaRoute from "./components/MediaRoute.vue";
 import messages from "./messages.json";
+import "./style.scss";
 
 const i18n = createI18n({
     locale: "en",
@@ -39,10 +38,6 @@ const router = createRouter({
                     path: "",
                     component: MediaPicker
                 },
-                {
-                    path: ":bundle/:game",
-                    component: MediaView
-                }
             ]
         },
         {
